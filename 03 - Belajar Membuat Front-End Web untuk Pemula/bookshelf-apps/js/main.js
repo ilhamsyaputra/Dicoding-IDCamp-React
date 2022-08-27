@@ -1,4 +1,5 @@
 const books = [];
+let booksSearch = [];
 const RENDER_EVENT = 'render-book';
 const SAVED_EVENT = 'saved-book';
 const STORAGE_KEY = 'BOOKSHELF_APPS';
@@ -23,6 +24,17 @@ const addBook = () => {
 };
 
 
+const searchBook = () => {
+    booksSearch = [];
+    const searchKeyword = document.getElementById('searchBookTitle').value;
+
+    booksSearch = books.filter(
+        book => book.title.toLowerCase().includes(searchKeyword.toLowerCase())
+    );
+    document.dispatchEvent(new Event(RENDER_EVENT));
+};
+
+
 const makeBookElement = (book) => {
     const title = document.createElement('h3');
     title.innerText = book.title;
@@ -37,6 +49,7 @@ const makeBookElement = (book) => {
     container.classList.add('book_item');
     container.append(title, author, year);
 
+
     if (book.isComplete) {
         const undoButton = document.createElement('button');
         undoButton.classList.add('green');
@@ -49,12 +62,13 @@ const makeBookElement = (book) => {
         const deleteButton = document.createElement('button');
         deleteButton.classList.add('red');
         deleteButton.innerText = 'Hapus Buku';
+        deleteButton.setAttribute('id', 'deleteButton');
 
         deleteButton.addEventListener('click', () => {
             removeBook(book.id);
         });
 
-
+    
         const actionButton = document.createElement('div');
         actionButton.classList.add('action');
         actionButton.setAttribute('id', book.id);
@@ -74,6 +88,7 @@ const makeBookElement = (book) => {
         const deleteButton = document.createElement('button');
         deleteButton.classList.add('red');
         deleteButton.innerText = 'Hapus Buku';
+        deleteButton.setAttribute('id', 'deleteButton');
 
         deleteButton.addEventListener('click', () => {
             removeBook(book.id);
@@ -182,6 +197,7 @@ document.addEventListener(SAVED_EVENT, () => {
 
 
 document.addEventListener('DOMContentLoaded', () => {
+    // submit form input data
     const submitForm = document.getElementById('inputBook');
 
     if (isStorageExist()) {
@@ -191,6 +207,14 @@ document.addEventListener('DOMContentLoaded', () => {
     submitForm.addEventListener('submit', (event) => {
         event.preventDefault();
         addBook();
+    })
+
+
+    // search book
+    const searchForm = document.getElementById('searchBook');
+    searchForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        searchBook();
     })
 });
 
@@ -202,7 +226,15 @@ document.addEventListener(RENDER_EVENT, () => {
     const completedBook = document.getElementById('completeBookshelfList');
     completedBook.innerHTML = '';
 
-    for (const book of books) {
+    const searchBookByTitle = document.getElementById('searchBookTitle').value;
+
+    if (!searchBookByTitle) {
+        tempBook = books;
+    } else {
+        tempBook = booksSearch;
+    }
+
+    for (const book of tempBook) {
         const bookElement = makeBookElement(book);
 
         if (!book.isComplete) {
