@@ -18,6 +18,7 @@ class NotesApp extends React.Component {
     this.onArchiveHandler = this.onArchiveHandler.bind(this);
     this.onActiveHandler = this.onActiveHandler.bind(this);
     this.onDeleteArchivedHandler = this.onDeleteArchivedHandler.bind(this);
+    this.onAddNoteHandler = this.onAddNoteHandler.bind(this);
   }
 
   findNote(id) {
@@ -52,7 +53,7 @@ class NotesApp extends React.Component {
               note,
             ]
           }
-        })
+        });
       }
     }
     return null;
@@ -76,6 +77,23 @@ class NotesApp extends React.Component {
     }
   }
 
+  onAddNoteHandler({ title, body }) {
+    this.setState((prevState) => {
+      return {
+        notes: [
+          ...prevState.notes,
+          {
+            id: +new Date(),
+            title: title,
+            body: body,
+            archived: false,
+            createdAt: new Date(),
+          }
+        ]
+      }
+    });
+  }
+
 
   render() {
     return (
@@ -83,7 +101,7 @@ class NotesApp extends React.Component {
           <Header />
 
           <div className='note-app__body'>
-            <NoteInput />
+            <NoteInput addNote={this.onAddNoteHandler} />
             <h2>Catatan Aktif</h2>
             <NoteList notes={this.state.notes} onDeleteActive={this.onDeleteActiveHandler} onArchive={this.onArchiveHandler} />
             <h2>Arsip</h2>
