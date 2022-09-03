@@ -14,8 +14,10 @@ class NotesApp extends React.Component {
       archivedNotes: [],
     };
 
-    this.onDeleteHandler = this.onDeleteHandler.bind(this);
+    this.onDeleteActiveHandler = this.onDeleteActiveHandler.bind(this);
     this.onArchiveHandler = this.onArchiveHandler.bind(this);
+    this.onActiveHandler = this.onActiveHandler.bind(this);
+    this.onDeleteArchivedHandler = this.onDeleteArchivedHandler.bind(this);
   }
 
   findNote(id) {
@@ -27,10 +29,14 @@ class NotesApp extends React.Component {
     return null;
   }
 
-  onDeleteHandler(id) {
+  onDeleteActiveHandler(id) {
     const notes = this.state.notes.filter(note => note.id !== id);
     this.setState({ notes });
-    console.log(notes);
+  }
+
+  onDeleteArchivedHandler(id) {
+    const archivedNotes = this.state.archivedNotes.filter(note => note.id !== id);
+    this.setState({ archivedNotes })
   }
 
   onArchiveHandler(id) {
@@ -52,6 +58,24 @@ class NotesApp extends React.Component {
     return null;
   }
 
+  onActiveHandler(id) {
+    for (const note of this.state.archivedNotes) {
+      if (note.id === id) {
+        note.archived = false;
+
+        this.setState((prevState) => {
+          return {
+            notes: [
+              ...prevState.notes,
+              note,
+            ],
+            archivedNotes: this.state.archivedNotes.filter(note => note.archived === true),
+          }
+        });
+      }
+    }
+  }
+
 
   render() {
     return (
@@ -61,9 +85,9 @@ class NotesApp extends React.Component {
           <div className='note-app__body'>
             <NoteInput />
             <h2>Catatan Aktif</h2>
-            <NoteList notes={this.state.notes} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler}/>
+            <NoteList notes={this.state.notes} onDeleteActive={this.onDeleteActiveHandler} onArchive={this.onArchiveHandler} />
             <h2>Arsip</h2>
-            <NoteList notes={this.state.archivedNotes} onDelete={this.onDeleteHandler} onArchive={this.onArchiveHandler}/>
+            <NoteList notes={this.state.archivedNotes} onDeleteArchived={this.onDeleteArchivedHandler} onActive={this.onActiveHandler} />
           </div>
         </>
     );
