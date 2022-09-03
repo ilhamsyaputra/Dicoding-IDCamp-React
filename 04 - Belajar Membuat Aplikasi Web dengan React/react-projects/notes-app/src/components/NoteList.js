@@ -2,6 +2,12 @@ import React from "react";
 import NoteItem from "./NoteItem";
 
 function NoteList({ notes, onDeleteActive, onDeleteArchived, onArchive, onActive }) {
+  if (!notes.length) {
+    return (
+      <p className='notes-list__empty-message'>Tidak ada catatan</p>
+    )
+  }
+  
   return (
     <div className='notes-list'>
       {
