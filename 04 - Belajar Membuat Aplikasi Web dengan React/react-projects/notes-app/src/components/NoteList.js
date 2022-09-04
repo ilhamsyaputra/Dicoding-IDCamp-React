@@ -16,7 +16,7 @@ function NoteList({ notes, onDeleteActive, onDeleteArchived, onArchive, onActive
   // console.log(`Banyak item di array: ${notes.length}
   // \n length dari keyword: ${keyword.length}
   // \n !keyword.length: ${!keyword.length}
-  // \n !keyword: ${keyword}
+  // \n keyword: ${keyword}
   // `)
 
   return (

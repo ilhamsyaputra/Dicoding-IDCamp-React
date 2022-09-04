@@ -12,8 +12,6 @@ class NotesApp extends React.Component {
     this.state = {
       notes: getInitialData(),
       archivedNotes: [],
-      filteredActiveNotes: [],
-      filteredArchivedNotes: [],
       keyword: '',
     };
 
@@ -92,7 +90,6 @@ class NotesApp extends React.Component {
 
   onSearchKeywordHandler({ keyword }) {
     this.setState({ keyword })
-    console.log(`${this.state.keyword} - ${this.state.keyword === ''} - ${keyword}`);
   }
 
 
