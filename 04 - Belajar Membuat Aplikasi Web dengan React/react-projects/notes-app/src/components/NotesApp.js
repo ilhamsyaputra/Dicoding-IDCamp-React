@@ -12,6 +12,9 @@ class NotesApp extends React.Component {
     this.state = {
       notes: getInitialData(),
       archivedNotes: [],
+      filteredActiveNotes: [],
+      filteredArchivedNotes: [],
+      keyword: '',
     };
 
     this.onDeleteActiveHandler = this.onDeleteActiveHandler.bind(this);
@@ -19,16 +22,9 @@ class NotesApp extends React.Component {
     this.onActiveHandler = this.onActiveHandler.bind(this);
     this.onDeleteArchivedHandler = this.onDeleteArchivedHandler.bind(this);
     this.onAddNoteHandler = this.onAddNoteHandler.bind(this);
+    this.onSearchKeywordHandler = this.onSearchKeywordHandler.bind(this);
   }
 
-  findNote(id) {
-    for (const note of this.state.notes) {
-      if (note.id === id) {
-        return note;
-      }
-    }
-    return null;
-  }
 
   onDeleteActiveHandler(id) {
     const notes = this.state.notes.filter(note => note.id !== id);
@@ -94,18 +90,23 @@ class NotesApp extends React.Component {
     });
   }
 
+  onSearchKeywordHandler({ keyword }) {
+    this.setState({ keyword })
+    console.log(`${this.state.keyword} - ${this.state.keyword === ''} - ${keyword}`);
+  }
+
 
   render() {
     return (
         <>
-          <Header />
+          <Header searchKeyword={this.onSearchKeywordHandler} />
 
           <div className='note-app__body'>
             <NoteInput addNote={this.onAddNoteHandler} />
             <h2>Catatan Aktif</h2>
-            <NoteList notes={this.state.notes} onDeleteActive={this.onDeleteActiveHandler} onArchive={this.onArchiveHandler} />
+            <NoteList notes={this.state.notes} onDeleteActive={this.onDeleteActiveHandler} onArchive={this.onArchiveHandler} keyword={this.state.keyword} />
             <h2>Arsip</h2>
-            <NoteList notes={this.state.archivedNotes} onDeleteArchived={this.onDeleteArchivedHandler} onActive={this.onActiveHandler} />
+            <NoteList notes={this.state.archivedNotes} onDeleteArchived={this.onDeleteArchivedHandler} onActive={this.onActiveHandler} keyword={this.state.keyword} />
           </div>
         </>
     );

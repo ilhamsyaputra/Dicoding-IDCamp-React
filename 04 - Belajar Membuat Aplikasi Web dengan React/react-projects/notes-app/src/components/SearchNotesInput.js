@@ -17,6 +17,8 @@ class SearchNotesInput extends React.Component {
         keyword: event.target.value,
       }
     });
+
+    console.log(this.props)
   }
 
   render() {
